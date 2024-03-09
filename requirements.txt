@@ -7,4 +7,4 @@ gunicorn==21.2.0
 flask-restful==0.3.10
 uvicorn==0.28.0
 logging==0.4.9.6
-json
+json==3.12.2
