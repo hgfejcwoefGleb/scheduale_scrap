@@ -1,0 +1,1 @@
+worker: python selenium_scrap.py
