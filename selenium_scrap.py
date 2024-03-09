@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 
 app = Flask(__name__)
 
-
+#
 def download_selenium():
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
