@@ -1,9 +1,11 @@
+import json
+
 from selenium import webdriver
 from flask import Flask, request
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-
+import logging
 app = Flask(__name__)
 
 #
@@ -18,11 +20,27 @@ def download_selenium():
     title = driver.title
     return title
 
-@app.route('/', methods = ['GET', 'POST'])
-def home():
-    if request.method == "GET":
-        return download_selenium()
+logging.basicConfig(level=logging.DEBUG)
 
+@app.route("/", methods=["POST"])
+def main():
+    logging.info(request.json)
 
-if __name__ == "__main__":
-    app.run(debug=True, port=3000) #вроде использоваться по дефолту будет 5000, мб будут проблемы
+    response = {
+        "version": request.json["version"],
+        "session": request.json["session"],
+        "response": {
+            "end_session": False
+        }
+    }
+
+    req = request.json
+    if req["session"]["new"]:
+        response["response"]["text"] = download_selenium()
+    else:
+        if req["request"]["original_utterance"].lower() in ["хорошо", "отлично"]:
+            response["response"]["text"] = "Супер! Я за вас рада!"
+        elif req["request"]["original_utterance"].lower() in ["плохо", "скучно"]:
+            response["response"]["text"] = "Это печально... нужно было позвать меня!"
+
+    return json.dumps(response)
