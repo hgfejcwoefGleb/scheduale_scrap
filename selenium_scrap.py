@@ -1,5 +1,4 @@
 
-
 from selenium import webdriver
 from flask import Flask, request
 from selenium.webdriver.chrome.service import Service
@@ -23,7 +22,6 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['POST'])
-@app.route('/alice/', methods=['POST'])
 def respond():
     data = request.json
     command = data.get('request', {}).get('command', '')
