@@ -1,11 +1,10 @@
-import json
+
 
 from selenium import webdriver
 from flask import Flask, request
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-import logging
+
 app = Flask(__name__)
 
 #
@@ -20,27 +19,33 @@ def download_selenium():
     title = driver.title
     return title
 
-logging.basicConfig(level=logging.DEBUG)
+app = Flask(__name__)
 
-@app.route("/", methods=["POST"])
-def main():
-    logging.info(request.json)
+
+@app.route('/', methods=['POST'])
+@app.route('/alice/', methods=['POST'])
+def respond():
+    data = request.json
+    command = data.get('request', {}).get('command', '')
+
+    end_session = False
+
+    if 'выход' in command:
+        response_text = 'До свидания!'
+        end_session = True
+    elif command:
+        response_text = f'Вы сказали {command, download_selenium()}'
+    else:
+        response_text = 'Привет! Вы ничего не сказали.'
 
     response = {
-        "version": request.json["version"],
-        "session": request.json["session"],
-        "response": {
-            "end_session": False
-        }
+        'response': {
+            'text': response_text,
+            'end_session ': end_session
+        },
+        'version': '1.0'
     }
+    return response
 
-    req = request.json
-    if req["session"]["new"]:
-        response["response"]["text"] = download_selenium()
-    else:
-        if req["request"]["original_utterance"].lower() in ["хорошо", "отлично"]:
-            response["response"]["text"] = "Супер! Я за вас рада!"
-        elif req["request"]["original_utterance"].lower() in ["плохо", "скучно"]:
-            response["response"]["text"] = "Это печально... нужно было позвать меня!"
 
-    return json.dumps(response)
+app.run(host='0.0.0.0', port=5000, debug=True)
