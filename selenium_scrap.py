@@ -24,7 +24,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def respond():
     if request.method == "GET":
-        return download_selenium()
+        return download_selenium() + ""
 
 
 app.run(host='0.0.0.0', port=5000, debug=True)
