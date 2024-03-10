@@ -2,7 +2,6 @@ selenium
 webdriver_manager
 attrs
 dialogic
-dnspython
 pymongo
 mongomock
 requests
